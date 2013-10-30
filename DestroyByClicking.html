@@ -63,8 +63,11 @@
                                   {
                                     if(destroyable == true)
                                     {
-                                      rect1.destroy();
-                                      stage.draw();
+                                      if(confirm('Delete?') == true)
+                                      {
+                                        rect1.destroy();
+                                        stage.draw();
+                                      }
                                     }
                                   }
                               )
