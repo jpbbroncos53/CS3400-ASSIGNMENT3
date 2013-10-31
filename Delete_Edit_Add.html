@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="js/kinetic-v4.7.2.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <style  type="text/css">
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      #topBar
+      {
+        clear: both;
+        height: 50px;
+      }
+    </style>
+    <script>
+      $(function() {
+      $( "#dialog-delete" ).dialog({
+      autoOpen: false,
+        resizable: false,
+        height:250,
+        modal: true,
+       
+        buttons: {
+          "Yes": function() {
+           var passedShape = new Kinetic.Shape();
+          
+           passedShape = $(this).data('Shape');
+            $( this ).dialog( "close" );
+            passedShape.destroy();
+            stage.draw();
+          },
+          "No": function() {
+            $( this ).dialog( "close" );
+          }
+        }
+      });
+    });
+
+      $(function() {
+      $( "#dialog-edit" ).dialog({
+        autoOpen: false,
+        resizable: false,
+        height:350,
+        width:350,
+        modal: true,
+
+        buttons: {
+          "Yes": function() {
+            $( this ).dialog( "close" );
+          },
+          "No": function() {
+            $( this ).dialog( "close" );
+          }
+        }
+      });
+    });
+
+      
+    </script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript">
+
+        var destroyable = false;
+        var editable = false;
+
+          function toggleDestroy()
+          {
+            if(destroyable == false)
+            {
+              text.setFill('Red');
+              text.setText('IN DESTROY MODE');
+              stage.draw();
+              editable = false;
+              destroyable = true;
+            }
+            else if(destroyable == true)
+            {
+              text.setText('');
+              stage.draw();
+              destroyable = false;
+            }
+
+          }
+
+          function toggleEdit()
+          {
+            if(editable == false)
+            {
+              text.setFill('Green');
+              text.setText('IN EDIT MODE');
+              stage.draw();
+              destroyable = false;
+              editable = true;
+            }
+            else if(editable == true)
+            {
+              text.setText('');
+              stage.draw();
+              editable = false;
+            }
+
+          }
+
+          function addSquare()
+          {
+
+            var square = new Kinetic.Rect({
+            x: 239,
+            y: 75,
+            width: 100,
+            height: 100,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+            listening: true
+            });
+
+            square.on('mousedown', function() 
+                                  {
+                                    if(destroyable == true)
+                                    {
+                                      $( "#dialog-delete" ).data('Shape', this).dialog( "open" );
+                                    }
+                                    else if(editable == true)
+                                    {
+                                      document.getElementById('LorDLabel').innerHTML = 'Length: ';
+                                      document.getElementById("LengthOrDiameter").defaultValue = square.getWidth();
+                                      document.getElementById("BorderColor").defaultValue = square.getStroke();
+                                      document.getElementById("BackgroundColor").defaultValue = square.getFill();
+                                      $( "#dialog-edit" ).data('Shape', this).data('Type', 'Square').dialog( "open" );
+                                    }
+                                  }
+                              )
+           
+            layer.add(square);
+            stage.add(layer);
+          }
+
+          function addDiamond()
+          {
+
+            var diamond = new Kinetic.Rect({
+            x: 239,
+            y: 75,
+            width: 100,
+            height: 100,
+            fill: 'blue',
+            stroke: 'red',
+            strokeWidth: 1,
+            draggable: true,
+            listening: true,
+            rotationDeg: 45
+            });
+
+            diamond.on('mousedown', function() 
+                                  {
+                                    if(destroyable == true)
+                                    {
+                                      $( "#dialog-delete" ).data('Shape', this).dialog( "open" );
+                                    }
+                                    else if(editable == true)
+                                    {
+                                      document.getElementById('LorDLabel').innerHTML = 'Length: ';
+                                      document.getElementById("LengthOrDiameter").defaultValue = diamond.getWidth();
+                                      document.getElementById("BorderColor").defaultValue = diamond.getStroke();
+                                      document.getElementById("BackgroundColor").defaultValue = diamond.getFill();
+                                      $( "#dialog-edit" ).data('Shape', this).data('Type', 'Diamond').dialog( "open" );
+                                    }
+                                  }
+                              )
+           
+            layer.add(diamond);
+            stage.add(layer);
+          }
+
+          function addCircle()
+          {
+
+            var circle = new Kinetic.Circle({
+            x: 239,
+            y: 75,
+            radius: 75,
+            fill: 'red',
+            stroke: 'red',
+            strokeWidth: 3,
+            draggable: true,
+            listening: true
+            });
+
+            circle.on('mousedown', function() 
+                                  {
+                                    if(destroyable == true)
+                                    {
+                                      $( "#dialog-delete" ).data('Shape', this).dialog( "open" );
+                                    }
+                                    else if(editable == true)
+                                    {
+                                      document.getElementById('LorDLabel').innerHTML = 'Diameter: ';
+                                      document.getElementById("LengthOrDiameter").defaultValue = (circle.getRadius() * 2);
+                                      document.getElementById("BorderColor").defaultValue = circle.getStroke();
+                                      document.getElementById("BackgroundColor").defaultValue = circle.getFill();
+                                      $( "#dialog-edit" ).data('Shape', this).data('Type', 'Circle').dialog( "open" );
+                                    }
+                                  }
+                              )
+           
+            layer.add(circle);
+            stage.add(layer);
+          }
+      </script>
+
+
+    <div id = "topBar">
+      <button type="button" onclick="toggleDestroy()">Toggle Destroy Mode</button>
+      <button type="button" onclick="toggleEdit()">Toggle Edit Mode</button>
+      <button type="button" onclick="addSquare()"> Add Square </button>
+      <button type="button" onclick="addDiamond()"> Add Diamond </button>
+      <button type="button" onclick="addCircle()"> Add Circle </button>
+    </div>
+    <div id="container"></div>
+    
+    <script defer="defer">
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 1300,
+        height: 600
+      });
+
+      var layer = new Kinetic.Layer();
+
+      var text = new Kinetic.Text({
+                x: 600,
+                y: 10,
+                fontFamily: 'Calibri',
+                fontSize: 24,
+                text: '',
+                fill: 'Red'
+            });
+        layer.add(text);
+        stage.add(layer);
+
+
+
+    </script>
+    <div id="dialog-delete" title="Delete?">
+      <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span> Are You Sure You Want To Delete?</p>
+    </div>
+
+    <div id="dialog-edit" title="Edit">
+      <form>
+        <fieldset>
+          <label for="LengthOrDiameter" id="LorDLabel">Length or Diameter: </label>
+          <input type="text" name="LengthOrDiameter" id="LengthOrDiameter" />
+          <label for="BorderColor">Border Color: </label>
+          <input type="text" name="BorderColor" id="BorderColor" />
+          <label for="BackgroundColor">Background Color: </label>
+          <input type="text" name="BackgroundColor" id="BackgroundColor" />
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>
