@@ -1,13 +1,9 @@
-function preload(url)
-{
+// FUNCTIONS __________________________________________________________________
+function preload(url) {
 	var img = new Image();
 	img.src = url;
-	return img;
+	return img
 }
-
-var removeIcon = preload('icons/remove.png');
-var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
-var removing = false;
 
 function getRandomColor() {
 		return colors[Math.round(Math.random() * 5)];
@@ -76,16 +72,7 @@ function remove(layer) {
 	}
 }
 
-var stage = new Kinetic.Stage({
-	container: 'canvas-div',
-	width: $('#canvas-div').width(),
-	height: $('#canvas-div').height()
-});
-
-var layer = new Kinetic.Layer();
-stage.add(layer);
-
-for(var n = 0; n < 10; n++) {
+function create(layer) {
 	var radius = Math.random() * 100 + 20;
 	var shape = new Kinetic.RegularPolygon({
 		x: Math.random() * stage.getWidth(),
@@ -101,12 +88,60 @@ for(var n = 0; n < 10; n++) {
 	stage.draw();
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ *	MAIN
+ *
+ */
+
+// GLOBALS ____________________________________________________________________
+var removeIcon = preload('icons/remove.png');
+var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+var removing = false;
+
+// Create the stage using the container height & width
+var stage = new Kinetic.Stage({
+	container: 'canvas-div',
+	width: $('#canvas-div').width(),
+	height: $('#canvas-div').height()
+});
+
+// Create a new layer and add it to the stage
+var layer = new Kinetic.Layer();
+stage.add(layer);
+
+// Create 10 random shapes
+for(var n = 0; n < 10; n++) {
+	var radius = Math.random() * 100 + 20;
+	var shape = new Kinetic.RegularPolygon({
+		x: Math.random() * stage.getWidth(),
+		y: Math.random() * stage.getHeight(),
+		sides: Math.ceil(Math.random() * 5 + 3),
+		radius: radius,
+		fill: getRandomColor(),
+		opacity: (radius - 20) / 100,
+		draggable: true
+	});
+
+	// Add each shape to the layer
+	layer.add(shape);
+}
+
+// Redraw the stage
 stage.draw();
 
+// BUTTON FUNCTIONS ___________________________________________________________
+// Create button linking to create function
+$('#create').click(function () {
+	create(layer);
+});
+
+// Modify button linking to tango function
 $('#modify').click(function() {
 	tango(layer);
 });
 
+// Remove button is toggable, linking to remove function
 $('#remove').click(function () {
 	$(this).toggleClass('btn-hold');
 	removing = !removing;

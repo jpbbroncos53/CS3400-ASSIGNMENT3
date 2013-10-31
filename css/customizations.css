@@ -6,11 +6,12 @@ html, body {
 	height: 100%;
 }
 
-div.row.fill {
-	height: 80%;
+.fill {
+	height: calc(100% - 119px - 20px);
 }
 
 #canvas-div {
+	overflow: hidden;
 	border: 1px solid rgb(204, 204, 204);
 }
 
