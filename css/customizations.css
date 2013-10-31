@@ -1,0 +1,40 @@
+html, body {
+	height: 100%;
+}
+
+.container {
+	height: 100%;
+}
+
+div.row.fill {
+	height: 80%;
+}
+
+#canvas-div {
+	border: 1px solid rgb(204, 204, 204);
+}
+
+.col-md-2 {
+	height: 100%;
+	padding-right: 0px;
+	margin-right: -1px;
+}
+
+.col-md-10 {
+	height: 100%;
+	width: 82%;
+	padding: 0px;
+}
+
+.btn-group-vertical>.btn:first-child:not(:last-child) {
+	border-top-right-radius: 0px;
+}
+
+.btn-group-vertical>.btn:last-child:not(:first-child) {
+	border-bottom-right-radius: 0px;
+}
+
+.btn-group-vertical>.btn, .btn-group-vertical>.btn-group {
+	float: left;
+	text-align: left;
+}
