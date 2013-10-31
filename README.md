@@ -13,7 +13,11 @@
 
 #Notes:#
 
-_Stuart on 10/31 @12:30PM_
+_Stuart on 10/31 @ 1:30PM_
+
+I'm pretty sure deleteByClicking is done. I was able to remove some global variables and now they don't need to be stored in an array
+
+_Stuart on 10/31 @ 12:30PM_
 
 I was able to change the the prompt for delete from a simple dialog box to one that we can change the styling. I haven't done any of the styling for it yet, it is set to what it defaulted to. This required me to go back to using the array based implementation of the shapes. Its not done yet so I didn't want to add it to the main project yet.
 
