@@ -15,7 +15,7 @@
 
 _Stuart on 10/31 @ 7:00PM_
 
-Changed up the Delete file, it now contains functions to create Circles, Squares, and Diamonds. It also contains an edit function that is not complete but so far I have it opening a dialog box with three fields. I set the default values of these feilds to the current value of the shape. The delete function is finished.
+Changed up the Delete file. Iit now contains functions to create Circles, Squares, and Diamonds. These are just placeholders and don't allow any changing of the values before they are created, the "mouseup" handlers are the only thing that is required to be added to the real create functions. It also contains an edit function that is not complete, but so far I have it opening a dialog box with three fields. I set the default values of these fields to the current value of the shape. The delete function is finished.
 
 _Stuart on 10/31 @ 1:30PM_
 
