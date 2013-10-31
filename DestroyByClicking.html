@@ -1,7 +1,10 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.2.min.js"></script>
+    <script src="js/kinetic-v4.7.2.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
     <style  type="text/css">
       body {
         margin: 0px;
@@ -14,6 +17,26 @@
         height: 50px;
       }
     </style>
+    <script>
+      $(function() {
+      $( "#dialog-confirm" ).dialog({
+      autoOpen: false,
+        resizable: false,
+        height:250,
+        modal: true,
+        buttons: {
+          "Yes": function() {
+            $( this ).dialog( "close" );
+            callback(true);
+          },
+          "No": function() {
+            $( this ).dialog( "close" );
+            callback(false);
+          }
+        }
+      });
+    });
+    </script>
 
 
   </head>
@@ -23,7 +46,34 @@
         var shapeArray = new Array();
         var deleteID = -1;
         var destroyable = false;
-        
+          function callback(value)
+          {
+            if(value == true)
+            {
+              if(deleteID != -1)
+              {
+                var rect = new Kinetic.Rect();
+                rect = shapeArray[deleteID];
+                rect.destroy();
+                stage.draw();
+                deleteID = -1;
+                toggleDestroy();
+              }
+            }
+            else
+            {
+              deleteID = -1;
+            }
+          }
+
+          function workForMe()
+          {
+            $( "#dialog-confirm" ).dialog( "open" );
+            var rect = new Kinetic.Rect();
+
+            rect = shapeArray[0];
+            alert("YO: " + rect.getId())
+          }
 
           function toggleDestroy()
           {
@@ -44,6 +94,7 @@
 
           function addShape()
           {
+
             var rect1 = new Kinetic.Rect({
             x: 239,
             y: 75,
@@ -59,15 +110,12 @@
 
             shapeArray[shapeArray.length] = rect1;
 
-            rect1.on('click', function() 
+            rect1.on('mousedown', function() 
                                   {
                                     if(destroyable == true)
                                     {
-                                      if(confirm('Delete?') == true)
-                                      {
-                                        rect1.destroy();
-                                        stage.draw();
-                                      }
+                                      deleteID = rect1.getId();
+                                      $( "#dialog-confirm" ).dialog( "open" );
                                     }
                                   }
                               )
@@ -82,6 +130,7 @@
       <button type="button" onclick="toggleDestroy()">Toggle Destroy Mode</button>
       <br>
       <button type="button" onclick="addShape()"> add shape </button>
+      <button type="button" onclick="workForMe()"> work </button>
     </div>
     <div id="container"></div>
     
@@ -108,5 +157,7 @@
 
 
     </script>
+    <div id="dialog-confirm" title="Delete?">
+  <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span> Are You Sure You Want To Delete?</p>
   </body>
 </html>
