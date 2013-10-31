@@ -13,6 +13,11 @@
 
 #Notes:#
 
+_Stuart on 10/31 @12:30PM_
+
+I was able to change the the prompt for delete from a simple dialog box to one that we can change the styling. I haven't done any of the styling for it yet, it is set to what it defaulted to. This required me to go back to using the array based implementation of the shapes. Its not done yet so I didn't want to add it to the main project yet.
+
+
 _Colin on 10/30 @ 8:30PM_
 
 Set up the basic frame with side buttons. Currently the `Modify` button will call the tango function from the demo. Canvas is dynamically sized. We can add more buttons if needed. Most of the functionality is going to come from the Javascript though. We may want to implement our own class that will be graphically represented by the KineticJS shape which may make it easier for us to create simple user interface stuff.
