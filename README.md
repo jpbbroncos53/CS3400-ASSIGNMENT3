@@ -13,6 +13,10 @@
 
 #Notes:#
 
+_Stuart on 10/31 @ 7:00PM_
+
+Changed up the Delete file, it now contains functions to create Circles, Squares, and Diamonds. It also contains an edit function that is not complete but so far I have it opening a dialog box with three fields. I set the default values of these feilds to the current value of the shape. The delete function is finished.
+
 _Stuart on 10/31 @ 1:30PM_
 
 I'm pretty sure deleteByClicking is done. I was able to remove some global variables and now they don't need to be stored in an array. The dialog box still needs to be styled
