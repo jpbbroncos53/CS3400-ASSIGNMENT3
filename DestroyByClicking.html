@@ -24,14 +24,18 @@
         resizable: false,
         height:250,
         modal: true,
+       
         buttons: {
           "Yes": function() {
+           var passedShape = new Kinetic.Shape();
+          
+           passedShape = $(this).data('Shape');
             $( this ).dialog( "close" );
-            callback(true);
+            passedShape.destroy();
+            stage.draw();
           },
           "No": function() {
             $( this ).dialog( "close" );
-            callback(false);
           }
         }
       });
@@ -43,37 +47,8 @@
   <body>
     <script type="text/javascript">
 
-        var shapeArray = new Array();
-        var deleteID = -1;
         var destroyable = false;
-          function callback(value)
-          {
-            if(value == true)
-            {
-              if(deleteID != -1)
-              {
-                var rect = new Kinetic.Rect();
-                rect = shapeArray[deleteID];
-                rect.destroy();
-                stage.draw();
-                deleteID = -1;
-                toggleDestroy();
-              }
-            }
-            else
-            {
-              deleteID = -1;
-            }
-          }
 
-          function workForMe()
-          {
-            $( "#dialog-confirm" ).dialog( "open" );
-            var rect = new Kinetic.Rect();
-
-            rect = shapeArray[0];
-            alert("YO: " + rect.getId())
-          }
 
           function toggleDestroy()
           {
@@ -104,23 +79,19 @@
             stroke: 'black',
             strokeWidth: 4,
             draggable: true,
-            id: shapeArray.length,
             listening: true
             });
-
-            shapeArray[shapeArray.length] = rect1;
 
             rect1.on('mousedown', function() 
                                   {
                                     if(destroyable == true)
                                     {
-                                      deleteID = rect1.getId();
-                                      $( "#dialog-confirm" ).dialog( "open" );
+                                      $( "#dialog-confirm" ).data('Shape', this).dialog( "open" );
                                     }
                                   }
                               )
            
-            layer.add(shapeArray[(shapeArray.length - 1)]);
+            layer.add(rect1);
             stage.add(layer);
           }
       </script>
@@ -161,3 +132,4 @@
   <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span> Are You Sure You Want To Delete?</p>
   </body>
 </html>
+
