@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Flowchart Application</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" href="css/customizations.css">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="page-header">
+				<h1>Flowchart Application <small>lorem ipsum dolor sit amet</small></h1>
+			</div>
+		</div>
+		<div class="row fill">
+			<div class="col-md-2">
+				<div class="btn-group-vertical btn-group-lg pull-right">
+					<button id="create" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> New</button>
+					<button id="modify" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Modify</button>
+					<button id="remove" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+				</div>
+			</div>
+			<div id="canvas-div" class="col-md-10">
+				<!-- canvas is placed by KineticJS -->
+			</div>
+		</div>
+	</div>
+</body>
+
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/kinetic-v4.7.2.js"></script>
+<script defer="defer" src="js/tango2.js"></script>
+</html>
