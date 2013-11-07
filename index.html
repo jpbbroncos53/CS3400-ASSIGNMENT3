@@ -17,9 +17,40 @@
 		<div class="row fill">
 			<div class="col-md-2">
 				<div class="btn-group-vertical btn-group-lg pull-right">
-					<button id="create" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> New</button>
+					<button id="create" class="btn btn-default pull-bottom"><span class="glyphicon glyphicon-plus"></span> New</button>
+					</ul>
+					<div id="shapes" class="btn-group-vertical btn-group-lg pull-right" style="display: none;">
+						<button id="square" class="btn btn-default">Square</button>
+						<button id="oval" class="btn btn-default">Oval</button>
+						<button id="diamond" class="btn btn-default">Diamond</button>
+					</div>
+					<button id="line" class="btn btn-default"><span class="glyphicon glyphicon-resize-full"></span> Line</button>
 					<button id="modify" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Modify</button>
 					<button id="remove" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+				</div>
+				<div id="modify-pane" style="display: none;">
+					<form id="modify-form" class="form-horizontal" role="form" onsubmit="return false;">
+						<div class="form-group">
+							<div class="col-sm-10">
+								<input id="sides" type="sides" class="form-control"  placeholder="Sides">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-10">
+								<input id="color" type="color" class="form-control"  placeholder="Color">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-10">
+								<input id="radius" type="radius" class="form-control"  placeholder="Radius">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button id="change" type="submit" class="btn btn-primary pull-right">Modify</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 			<div id="canvas-div" class="col-md-10">

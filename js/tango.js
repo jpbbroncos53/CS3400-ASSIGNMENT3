@@ -24,7 +24,6 @@ function tango(layer) {
 			y: Math.random() * stage.getHeight(), 
 			rotation: Math.random() * Math.PI * 2, 
 			radius: radius,
-			opacity: (radius - 20) / 100,
 			easing: Kinetic.Easings.EaseInOut,
 			fillR: color.r,
 			fillG: color.g,
@@ -36,10 +35,12 @@ function tango(layer) {
 function remove(layer) {
 	for(var n = 0; n < layer.getChildren().length; n++) {
 		var shape = layer.getChildren()[n];
+		var opacity = shape.getOpacity();
 		if(removing) {
 			shape.setDraggable(false);
 			shape.on('mouseover', function() {
 				document.body.style.cursor = 'pointer';
+				this.setOpacity(0.25);
 				var image = new Kinetic.Image({
 					x: this.getAttr('x') - 13,
 					y: this.getAttr('y') - 12,
@@ -51,6 +52,7 @@ function remove(layer) {
 				});
 
 				this.on('mouseout', function() {
+					this.setOpacity(1);
 					document.body.style.cursor = 'default';
 					image.destroy();
 					stage.draw();
@@ -72,15 +74,16 @@ function remove(layer) {
 	}
 }
 
-function create(layer) {
+function create(layer, edges, spin) {
 	var radius = Math.random() * 100 + 20;
 	var shape = new Kinetic.RegularPolygon({
 		x: Math.random() * stage.getWidth(),
 		y: Math.random() * stage.getHeight(),
-		sides: Math.ceil(Math.random() * 5 + 3),
+		rotation: spin,
+		sides: edges,
 		radius: radius,
 		fill: getRandomColor(),
-		opacity: (radius - 20) / 100,
+		opacity: 1,
 		draggable: true
 	});
 
@@ -98,6 +101,7 @@ function create(layer) {
 var removeIcon = preload('icons/remove.png');
 var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 var removing = false;
+var connecting = false;
 
 // Create the stage using the container height & width
 var stage = new Kinetic.Stage({
@@ -119,7 +123,7 @@ for(var n = 0; n < 10; n++) {
 		sides: Math.ceil(Math.random() * 5 + 3),
 		radius: radius,
 		fill: getRandomColor(),
-		opacity: (radius - 20) / 100,
+		opacity: 1,
 		draggable: true
 	});
 
@@ -131,14 +135,52 @@ for(var n = 0; n < 10; n++) {
 stage.draw();
 
 // BUTTON FUNCTIONS ___________________________________________________________
-// Create button linking to create function
+// Create button opens shapes tray
 $('#create').click(function () {
-	create(layer);
+	$('#shapes').slideToggle('fast');
+	$('#create').toggleClass('pull-bottom');
+});
+
+// Make a new square
+$('#square').click(function () {
+	create(layer, 4, Math.PI / 4);
+	$('#shapes').slideUp('fast');
+	$('#create').addClass('pull-bottom');
+});
+
+// Make a new oval
+$('#oval').click(function () {
+	create(layer, 6);
+	$('#shapes').slideUp('fast');
+	$('#create').addClass('pull-bottom');
+});
+
+// Make a new diamond
+$('#diamond').click(function() {
+	create(layer, 4);
+	$('#shapes').slideUp('fast');
+	$('#create').addClass('pull-bottom');
 });
 
 // Modify button linking to tango function
 $('#modify').click(function() {
 	tango(layer);
+	$('#modify-pane').slideToggle('fast');
+});
+
+// Modification form submission
+$('#modify-form').submit(function() {
+	alert("SIDES: " + $('#sides').val());
+	alert("COLOR: " + $('#color').val());
+	alert("RADIUS: " + $('#radius').val());
+	$('#modify-pane').slideUp('fast');
+});
+
+// Line button is toggable, linking to line function
+$('#line').click(function () {
+	$(this).toggleClass('btn-hold');
+	connecting = !connecting;
+	remove(layer);
 });
 
 // Remove button is toggable, linking to remove function
