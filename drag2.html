@@ -1,0 +1,111 @@
+  <!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="js/kinetic-v4.7.2.js"></script>
+    <script>
+//KineticJS Draw Line
+
+var stage = new Kinetic.Stage({
+    container: 'container',
+    width: 600,
+    height: 400
+});
+
+var background = new Kinetic.Rect({
+    x: 0,
+    y: 0,
+    width: stage.getWidth(),
+    height: stage.getHeight()
+});
+
+var layer = new Kinetic.Layer();
+
+layer.add(background);
+stage.add(layer);
+layer.drawScene();
+
+drawLine();
+
+function drawLine() {
+    var group, line, moving = false;
+
+    layer.on("mousedown", function (e) {
+        if (moving) {
+            moving = false;
+            layer.drawScene();
+        } else {
+            var mousePos = stage.getMousePosition();
+
+            group = new Kinetic.Group({
+                x: mousePos.x,
+                y: mousePos.y,
+                draggable: true
+            });
+
+            group.on("dragstart", function (evt) {
+                this.moveToTop();
+                document.body.style.cursor = 'move';
+            });
+            group.on("dragend", function (evt) {
+                document.body.style.cursor = 'default';
+            });
+
+
+            line = new Kinetic.Line({
+                points: [0, 0, 0, 0], //start point and end point are the same
+                stroke: '#000',
+                strokeWidth: 10,
+                name: 'line'
+            });
+
+            line.on("mouseover", function (evt) {
+                document.body.style.cursor = 'pointer';
+            });
+            line.on("mouseout", function (evt) {
+                document.body.style.cursor = 'default';
+            });
+
+            group.add(line);
+            layer.add(group);
+            moving = true;
+        }
+    });
+
+    layer.on("mousemove", function (e) {
+        if (moving) {
+            var mousePos = stage.getMousePosition();
+            var x = mousePos.x - group.getX();
+            var y = mousePos.y - group.getY();
+
+            line.getPoints()[1].x = x;
+            line.getPoints()[1].y = y;
+
+            moving = true;
+            layer.drawScene();
+        }
+    });
+
+    layer.on("mouseup", function (e) {
+        moving = false;
+        layer.draw();
+        layer.off('mousedown mousemove mouseup');
+    });
+
+}
+
+document.getElementById('line').onclick = function () {
+    drawLine();
+};
+    </script>
+  </body>
+</html>
