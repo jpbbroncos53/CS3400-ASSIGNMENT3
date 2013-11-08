@@ -1,21 +1,30 @@
 // FUNCTIONS __________________________________________________________________
+/*
+ *	Apparently this preloads images, but I kind of doubt it
+ */
 function preload(url) {
 	var img = new Image();
 	img.src = url;
 	return img
 }
 
+/*
+ *	Pick random color from colors array
+ */
 function getRandomColor() {
-		return colors[Math.round(Math.random() * 5)];
+	return colors[Math.round(Math.random() * 5)];
 }
 
-function tango(layer) {
-
+/*
+ *	Tango animation function (keeping around for fun)
+ */
+function tango(layer)
+{
 	for(var n = 0; n < layer.getChildren().length; n++) {
 		var color = Kinetic.Util.getRGB(getRandomColor());
 		var shape = layer.getChildren()[n];
 		var stage = shape.getStage();
-		var radius = Math.random() * 100 + 20;
+		var radius = Math.round(Math.random() * 100 + 20);
 		
 		new Kinetic.Tween({
 			node: shape, 
@@ -32,7 +41,69 @@ function tango(layer) {
 	}
 }
 
-function remove(layer) {
+/*
+ *	Shape modification mode function
+ */
+function modify(layer)
+{
+	for(var n = 0; n < layer.getChildren().length; n++) {
+		var shape = layer.getChildren()[n];
+		if(modifying) {
+			shape.setDraggable(false);
+			shape.on('mouseover', function() {
+				document.body.style.cursor = 'crosshair';
+				this.setStrokeWidth(4);
+				stage.draw();
+
+				this.on('mouseout', function() {
+					document.body.style.cursor = 'default';
+					this.setStrokeWidth(2);
+					stage.draw();
+				});
+
+				this.on('mousedown', function() {
+					for(var n = 0; n < layer.getChildren().length; n++) {
+						var shape = layer.getChildren()[n];
+						shape.setStrokeWidth(2);
+						shape.on('mouseover', function() {
+							document.body.style.cursor = 'crosshair';
+							this.setStrokeWidth(4);
+							stage.draw();
+						});
+						shape.on('mouseout', function() {
+							document.body.style.cursor = 'default';
+							this.setStrokeWidth(2);
+							stage.draw();
+						});
+					}
+					selectedShape = this;
+					this.off('mouseover mouseout');
+					this.on('mouseout', function() {
+						document.body.style.cursor = 'default';
+					});
+					this.setStrokeWidth(4);
+					sides.val(this.getSides());
+					color.val(this.getFill());
+					size.val(this.getRadius());
+					$('#sides')[0].selectionStart = 0;
+					$('#sides')[0].selectionEnd = $('#sides').val().length;
+					stage.draw();
+				});
+			});
+		} else {
+			shape.setDraggable(true);
+			shape.off('mouseover mouseout mousedown');
+			shape.setStrokeWidth(2);
+			stage.draw();
+		}
+	}
+}
+
+/*
+ *	Shape removal mode function
+ */
+function remove(layer)
+{
 	for(var n = 0; n < layer.getChildren().length; n++) {
 		var shape = layer.getChildren()[n];
 		var opacity = shape.getOpacity();
@@ -40,7 +111,7 @@ function remove(layer) {
 			shape.setDraggable(false);
 			shape.on('mouseover', function() {
 				document.body.style.cursor = 'pointer';
-				this.setOpacity(0.25);
+				this.setOpacity(0.6);
 				var image = new Kinetic.Image({
 					x: this.getAttr('x') - 13,
 					y: this.getAttr('y') - 12,
@@ -74,8 +145,12 @@ function remove(layer) {
 	}
 }
 
-function create(layer, edges, spin) {
-	var radius = Math.random() * 100 + 20;
+/*
+ *	Shape creation function
+ */
+function create(layer, edges, spin)
+{
+	var radius = Math.round(Math.random() * 100 + 20);
 	var shape = new Kinetic.RegularPolygon({
 		x: Math.random() * stage.getWidth(),
 		y: Math.random() * stage.getHeight(),
@@ -83,6 +158,7 @@ function create(layer, edges, spin) {
 		sides: edges,
 		radius: radius,
 		fill: getRandomColor(),
+		stroke: 'black',
 		opacity: 1,
 		draggable: true
 	});
@@ -100,8 +176,13 @@ function create(layer, edges, spin) {
 // GLOBALS ____________________________________________________________________
 var removeIcon = preload('icons/remove.png');
 var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+var sides = $('#sides');
+var color = $('#color');
+var size = $('#radius');
+var selectedShape = null;
 var removing = false;
 var connecting = false;
+var modifying = false;
 
 // Create the stage using the container height & width
 var stage = new Kinetic.Stage({
@@ -116,13 +197,14 @@ stage.add(layer);
 
 // Create 10 random shapes
 for(var n = 0; n < 10; n++) {
-	var radius = Math.random() * 100 + 20;
+	var radius = Math.round(Math.random() * 100 + 20);
 	var shape = new Kinetic.RegularPolygon({
 		x: Math.random() * stage.getWidth(),
 		y: Math.random() * stage.getHeight(),
 		sides: Math.ceil(Math.random() * 5 + 3),
 		radius: radius,
 		fill: getRandomColor(),
+		stroke: 'black',
 		opacity: 1,
 		draggable: true
 	});
@@ -164,15 +246,31 @@ $('#diamond').click(function() {
 
 // Modify button linking to tango function
 $('#modify').click(function() {
-	tango(layer);
+	$(this).toggleClass('btn-hold');
+	modifying = !modifying;
+	modify(layer);
 	$('#modify-pane').slideToggle('fast');
+	$('#modify-form').each(function () {
+		this.reset();
+	})
 });
 
 // Modification form submission
 $('#modify-form').submit(function() {
-	alert("SIDES: " + $('#sides').val());
-	alert("COLOR: " + $('#color').val());
-	alert("RADIUS: " + $('#radius').val());
+	// Should grab values from modify-pane here
+	if(selectedShape) {
+		selectedShape.setSides(sides.val());
+		selectedShape.setFill(color.val());
+		selectedShape.setRadius(size.val());
+		selectedShape.setStrokeWidth(2);
+		stage.draw();
+	}
+	this.reset();
+	modifying = !modifying;
+	// Calling modify with modify false deregisters callbacks
+	modify(layer);
+	document.body.style.cursor = 'default';
+	$('#modify').toggleClass('btn-hold');
 	$('#modify-pane').slideUp('fast');
 });
 
@@ -188,4 +286,8 @@ $('#remove').click(function () {
 	$(this).toggleClass('btn-hold');
 	removing = !removing;
 	remove(layer);
+});
+
+$('#tango').click(function () {
+	tango(layer);
 });
