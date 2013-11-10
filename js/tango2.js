@@ -7,6 +7,7 @@ function preload(url) {
 
 
 
+
 function remove(layer) {
 	for(var n = 0; n < layer.getChildren().length; n++) {
 		var shape = layer.getChildren()[n];
@@ -46,22 +47,6 @@ function remove(layer) {
 	}
 }
 
-function create(layer) {
-	var radius = Math.random() * 100 + 20;
-	var shape = new Kinetic.RegularPolygon({
-		x: Math.random() * stage.getWidth(),
-		y: Math.random() * stage.getHeight(),
-		sides: Math.ceil(Math.random() * 5 + 3),
-		radius: radius,
-		fill: 'red',
-		opacity: (radius - 20) / 100,
-		draggable: true
-	});
-
-	layer.add(shape);
-	stage.draw();
-}
-
 function addline(layer){
 	
 
@@ -98,12 +83,33 @@ stage.draw();
 // BUTTON FUNCTIONS ___________________________________________________________
 // Create button linking to create function
 $('#create').click(function () {
-	create(layer);
+
+	var menu = document.getElementById("add-edit-menu");
+	$('#edit-add-menu').html('<div id="dialog-add" title="Edit">' +
+          '<label for="Types: " id="typeLabel">Type: </label>' +
+          '<select name="type" id="addType">'+
+			'<option value="square">Square</option>'+
+			'<option value="diamond">Diamond</option>'+
+			'<option value="circle">Circle</option>'+
+			'</select>'+
+            '<button id="makeShape" onclick=callAddShape(document.getElementById("addType").value) class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create </button>' +
+    '</div>');
 });
+
+function callAddShape(value)
+{
+	$('#edit-add-menu').html("");
+	addShape(value);
+}
 
 // Modify button linking to tango function
 $('#modify').click(function() {
 	tango(layer);
+});
+
+$('#makeShape').click(function() {
+	alert("yes");
+	addShape(layer);
 });
 
 // Remove button is toggable, linking to remove function
