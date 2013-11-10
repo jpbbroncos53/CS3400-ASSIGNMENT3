@@ -13,6 +13,10 @@
 
 #Notes:#
 
+_Stuart on 11/10 @ 4:15PM_
+
+I edited index2 and tango2 to allow the user to pick the type of shape they want to create. It doesn't have much styling done for it because I'm not sure how we wanted to do it. The X icon for delete isn't positioning itself properly for the diamond and the square.
+
 _Stuart on 10/31 @ 7:00PM_
 
 Changed up the Delete file. Iit now contains functions to create Circles, Squares, and Diamonds. These are just placeholders and don't allow any changing of the values before they are created, the "mouseup" handlers are the only thing that is required to be added to the real create functions. It also contains an edit function that is not complete, but so far I have it opening a dialog box with three fields. I set the default values of these fields to the current value of the shape. The delete function is finished.
