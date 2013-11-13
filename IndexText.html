@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Flowchart Application</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" href="css/customizations.css">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="page-header">
+				<h1 class="text-center">Flowchart Application <small>created by Jacob Potter, Stuart Zeigar, Peter Martinez & <a href="#" id="tango">Colin MacCreery</a></small></h1>
+			</div>
+		</div>
+		<div class="row fill">
+			<div class="col-md-2">
+				<div class="btn-group-vertical btn-group-lg pull-right">
+					<button id="create" class="btn btn-default pull-bottom"><span class="glyphicon glyphicon-plus"></span> New</button>
+					</ul>
+					<div id="shapes" class="btn-group-vertical btn-group-lg pull-right" style="display: none;">
+						<button id="square" class="btn btn-default">Square</button>
+						<button id="oval" class="btn btn-default">Oval</button>
+						<button id="diamond" class="btn btn-default">Diamond</button>
+					</div>
+					<button id="text" class="btn btn-default"><span class="glyphicon glyphicon-font"></span> Text</button>
+					<button id="line" class="btn btn-default"><span class="glyphicon glyphicon-resize-full"></span> Line</button>
+					<button id="modify" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Modify</button>
+					<button id="remove" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+				</div>
+				<div id="modify-pane" style="display: none;">
+					<form id="modify-form" class="form-horizontal" role="form" onsubmit="return false;">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input id="sides" type="sides" class="form-control"  placeholder="Sides">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input id="color" type="color" class="form-control"  placeholder="Color">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input id="radius" type="radius" class="form-control"  placeholder="Radius">
+							</div>
+						</div>
+						<!--this is the place to change the text-->
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input id="textField" type="text" class="form-control"  placeholder="Text">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<button id="change" type="submit" class="btn btn-primary btn-block">Modify</button>
+							</div>
+						</div>
+
+						
+
+					</form>
+				</div>
+
+			</div>
+			<div id="canvas-div" class="col-md-10">
+				<!-- canvas is placed by KineticJS -->
+			</div>
+		</div>
+	</div>
+</body>
+
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/kinetic-v4.7.2.min.js"></script>
+<script defer="defer" src="js/application.js"></script>
+</html>
