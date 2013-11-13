@@ -41,6 +41,71 @@ function tango(layer)
 	}
 }
 
+function addText(layer)
+{
+	for(var n = 0; n < layer.getChildren().length; n++) {
+		var group = new Kinetic.Group({
+			draggable: true,
+			listening: true
+		});
+		var text = new Kinetic.Text({
+			x: stage.getWidth() / 2,
+			y: 15,
+			text: 'Simple Text',
+			fontSize: 30,
+			fontFamily: 'Calibri',
+			fill: 'black'
+		});
+		var shape = layer.getChildren()[n];
+		if(texting) {
+			shape.setDraggable(false);
+			shape.on('mouseover', function() {
+				document.body.style.cursor = 'crosshair';
+				this.setStrokeWidth(4);
+				stage.draw();
+
+				this.on('mouseout', function() {
+					document.body.style.cursor = 'default';
+					this.setStrokeWidth(2);
+					stage.draw();
+				});
+
+				this.on('mousedown', function() {
+					for(var n = 0; n < layer.getChildren().length; n++) {
+						var shape = layer.getChildren()[n];
+						shape.setStrokeWidth(2);
+						shape.on('mouseover', function() {
+							document.body.style.cursor = 'crosshair';
+							this.setStrokeWidth(4);
+							stage.draw();
+						});
+						shape.on('mouseout', function() {
+							document.body.style.cursor = 'default';
+							this.setStrokeWidth(2);
+							stage.draw();
+						});
+					}
+					selectedShape = this;
+					this.off('mouseover mouseout');
+					this.on('mouseout', function() {
+						document.body.style.cursor = 'default';
+					});
+					this.setStrokeWidth(4);
+					group.add(text);
+					group.add(selectedShape);
+					layer.add(group);
+					stage.draw();
+				});
+			});
+		} else {
+			shape.setDraggable(true);
+			shape.off('mouseover mouseout mousedown');
+			shape.setStrokeWidth(2);
+			stage.draw();
+		}
+	}
+}
+
 /*
  *	Shape modification mode function
  */
@@ -82,11 +147,18 @@ function modify(layer)
 						document.body.style.cursor = 'default';
 					});
 					this.setStrokeWidth(4);
-					sides.val(this.getSides());
-					color.val(this.getFill());
-					size.val(this.getRadius());
-					$('#sides')[0].selectionStart = 0;
-					$('#sides')[0].selectionEnd = $('#sides').val().length;
+					if(this.getClassName() === 'Ellipse') {
+						color.val(this.getFill());
+						size.val(this.getRadius().x);
+						$('#color')[0].selectionStart = 0;
+						$('#color')[0].selectionEnd = $('#sides').val().length;
+					} else {
+						sides.val(this.getSides());
+						color.val(this.getFill());
+						size.val(this.getRadius());
+						$('#sides')[0].selectionStart = 0;
+						$('#sides')[0].selectionEnd = $('#sides').val().length;
+					}
 					stage.draw();
 				});
 			});
@@ -167,6 +239,25 @@ function create(layer, edges, spin)
 	stage.draw();
 }
 
+function createOval(layer, radius)
+{
+	var shape = new Kinetic.Ellipse({
+		x: Math.random() * stage.getWidth(),
+		y: Math.random() * stage.getHeight(),
+		radius: {
+			x: radius * 2,
+			y: radius
+		},
+		fill: getRandomColor(),
+		stroke: 'black',
+		opacity: 1,
+		draggable: true
+	});
+
+	layer.add(shape);
+	stage.draw();
+}
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  *	MAIN
@@ -183,6 +274,7 @@ var selectedShape = null;
 var removing = false;
 var connecting = false;
 var modifying = false;
+var texting = false;
 
 // Create the stage using the container height & width
 var stage = new Kinetic.Stage({
@@ -194,24 +286,6 @@ var stage = new Kinetic.Stage({
 // Create a new layer and add it to the stage
 var layer = new Kinetic.Layer();
 stage.add(layer);
-
-// Create 10 random shapes
-for(var n = 0; n < 10; n++) {
-	var radius = Math.round(Math.random() * 100 + 20);
-	var shape = new Kinetic.RegularPolygon({
-		x: Math.random() * stage.getWidth(),
-		y: Math.random() * stage.getHeight(),
-		sides: Math.ceil(Math.random() * 5 + 3),
-		radius: radius,
-		fill: getRandomColor(),
-		stroke: 'black',
-		opacity: 1,
-		draggable: true
-	});
-
-	// Add each shape to the layer
-	layer.add(shape);
-}
 
 // Redraw the stage
 stage.draw();
@@ -232,7 +306,8 @@ $('#square').click(function () {
 
 // Make a new oval
 $('#oval').click(function () {
-	create(layer, 6);
+	// create(layer, 6);
+	createOval(layer, Math.round(Math.random() * 100 + 20));
 	$('#shapes').slideUp('fast');
 	$('#create').addClass('pull-bottom');
 });
@@ -259,9 +334,14 @@ $('#modify').click(function() {
 $('#modify-form').submit(function() {
 	// Should grab values from modify-pane here
 	if(selectedShape) {
-		selectedShape.setSides(sides.val());
-		selectedShape.setFill(color.val());
-		selectedShape.setRadius(size.val());
+		if(selectedShape.getClassName() === 'RegularPolygon') {
+			selectedShape.setSides(sides.val());
+			selectedShape.setFill(color.val());
+			selectedShape.setRadius(size.val());
+		} else {
+			selectedShape.setFill(color.val());
+			selectedShape.setRadius([size.val(), size.val() / 2]);
+		}
 		selectedShape.setStrokeWidth(2);
 		stage.draw();
 	}
@@ -278,7 +358,14 @@ $('#modify-form').submit(function() {
 $('#line').click(function () {
 	$(this).toggleClass('btn-hold');
 	connecting = !connecting;
-	remove(layer);
+	/* connect function */
+});
+
+// Text button is toggable, linking to text function
+$('#text').click(function () {
+	$(this).toggleClass('btn-hold');
+	texting = !texting;
+	/* text function */
 });
 
 // Remove button is toggable, linking to remove function
